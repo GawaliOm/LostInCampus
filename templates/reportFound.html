@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Report Found Item - LostInCampus</title>
+  </head>
+
+  <body>
+    <h1>Report Found Item</h1>
+
+    <form method="POST">
+      <label>Name:</label><br />
+      <input type="text" name="name" required /><br /><br />
+
+      <label>Class:</label><br />
+      <input type="text" name="class_name" required /><br /><br />
+
+      <label>Contact Number:</label><br />
+      <input type="text" name="contact_number" required /><br /><br />
+
+      <label>Email:</label><br />
+      <input type="email" name="email" required /><br /><br />
+
+      <label>Item Photo:</label><br />
+      <input type="file" name="image" /><br /><br />
+
+      <label>Item Name:</label><br />
+      <input type="text" name="item_name" required /><br /><br />
+
+      <label>Description:</label><br />
+      <textarea name="description" required></textarea><br /><br />
+
+      <label>Where was it found?</label><br />
+      <input type="text" name="found_location" required /><br /><br />
+
+      <label>Date Found:</label><br />
+      <input type="date" name="found_date" required /><br /><br />
+
+      <label>Where can the owner collect it?</label><br />
+      <input type="text" name="collection_place" required /><br /><br />
+
+      <button type="submit">Submit Found Report</button>
+    </form>
+
+    <br />
+
+    <a href="/">← Back to Home</a>
+  </body>
+</html>
