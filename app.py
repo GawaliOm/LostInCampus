@@ -2,9 +2,22 @@ from flask import Flask, render_template, request
 from extentions import db
 from models.reportLost import LostItem
 from models.reportFound import FoundItem
+from dotenv import load_dotenv
+import cloudinary
+import os
+from cloudinary.uploader import upload
 
 
 app = Flask(__name__)
+
+
+load_dotenv()
+
+cloudinary.config(
+    cloud_name=os.getenv("mek2sacl"),
+    api_key=os.getenv("329286384197693"),
+    api_secret=os.getenv("QIbe3pnniCm_Jr3C3-wGkrSZIsE")
+)
 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///lostincampus.db"
@@ -28,6 +41,12 @@ def reportLost():
         name = request.form["name"]
         item_name = request.form["item_name"]
         email = request.form["email"]
+        image = request.files["image"]
+        image_url = None
+
+        if image and image.filename:
+            result = upload(image, folder="lostincampus/lost")
+            image_url = result["secure_url"]
         class_name = request.form["class_name"]
         contact_number = request.form["contact_number"]
         description = request.form["description"]
