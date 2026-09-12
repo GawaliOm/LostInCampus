@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Lost Item Details</title>
+  </head>
+  <body>
+    <h1>Lost Item Details</h1>
+
+    <h2>{{ item.item_name }}</h2>
+
+    <p><strong>Description:</strong> {{ item.description }}</p>
+
+    <p><strong>Lost Location:</strong> {{ item.lost_location }}</p>
+
+    <p><strong>Date Lost:</strong> {{ item.lost_date }}</p>
+
+    <p><strong>Status:</strong> {{ item.status }}</p>
+
+    <hr />
+
+    <a href="/lost-items">← Back to Lost Items</a>
+  </body>
+</html>
