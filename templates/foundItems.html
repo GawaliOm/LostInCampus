@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Found Items - LostInCampus</title>
+  </head>
+
+  <body>
+    <h1>Found Items</h1>
+
+    {% if lost_items %} {% for item in lost_items %}
+
+    <div>
+      <h2>{{ item.item_name }}</h2>
+
+      <p><strong>Description:</strong> {{ item.description }}</p>
+
+      <p><strong>Lost Location:</strong> {{ item.lost_location }}</p>
+
+      <p><strong>Date Lost:</strong> {{ item.lost_date }}</p>
+
+      <p><strong>Status:</strong> {{ item.status }}</p>
+
+      <a href="/lost/{{ item.id }}">View Details</a>
+    </div>
+
+    <hr />
+
+    {% endfor %} {% else %}
+
+    <p>No Found items reported yet.</p>
+
+    {% endif %}
+
+    <br />
+
+    <a href="/">← Back to Home</a>
+  </body>
+</html>

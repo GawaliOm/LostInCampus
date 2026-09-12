@@ -89,10 +89,27 @@ def reportfound():
     return render_template("reportFound.html")
 
 
+# route to view lost items page
+
+@app.route("/lost-items")
+def lost_items():
+
+    items = LostItem.query.filter_by(status="Active").all()
+
+    return render_template("lostItems.html", lost_items=items)
+
+
+# route for found items page
+
+@app.route("/found-items")
+def found_items():
+    items = FoundItem.query.filter_by(status="Active").all()
+
+    return render_template("foundItems.html", lost_items=items)
 
 if __name__ == "__main__":
 
     with app.app_context():
         db.create_all()
 
-    app.run(debug = True)
+    app.run(debug = True)   
