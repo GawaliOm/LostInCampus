@@ -116,6 +116,17 @@ def lost_detail(id):
         item=item
     )
 
+
+@app.route("/find/<int:id>")
+def found_detail(id):
+    item = FoundItem.query.get_or_404(id)
+    return render_template(
+        "found_item.html",
+        item=item
+    )
+
+
+
 if __name__ == "__main__":
 
     with app.app_context():
