@@ -7,20 +7,41 @@
   <body>
     <h1>Found Items</h1>
 
-    {% if lost_items %} {% for item in lost_items %}
+    {% if found_items %} {% for item in found_items %}
 
     <div>
+      {% if item.image_url %}
+      <img src="{{ item.image_url }}" alt="Found Item" width="250" />
+      {% endif %}
+
       <h2>{{ item.item_name }}</h2>
 
-      <p><strong>Description:</strong> {{ item.description }}</p>
+      <p>
+        <strong>Description:</strong>
+        {{ item.description }}
+      </p>
 
-      <p><strong>Lost Location:</strong> {{ item.lost_location }}</p>
+      <p>
+        <strong>Found Location:</strong>
+        {{ item.found_location }}
+      </p>
 
-      <p><strong>Date Lost:</strong> {{ item.lost_date }}</p>
+      <p>
+        <strong>Date Found:</strong>
+        {{ item.found_date }}
+      </p>
 
-      <p><strong>Status:</strong> {{ item.status }}</p>
+      <p>
+        <strong>Collection Place:</strong>
+        {{ item.collection_place }}
+      </p>
 
-      <a href="/lost/{{ item.id }}">View Details</a>
+      <p>
+        <strong>Status:</strong>
+        {{ item.status }}
+      </p>
+
+      <a href="/found/{{ item.id }}">View Details</a>
     </div>
 
     <hr />

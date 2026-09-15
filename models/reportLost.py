@@ -8,6 +8,7 @@ class LostItem(db.Model):
     email = db.Column(db.String(70), nullable = False)
     item_name = db.Column(db.String(50), nullable = False)
     description = db.Column(db.String(100), nullable = False)
+    image_url = db.Column(db.String(500), nullable=True)
     lost_location = db.Column(db.String(100), nullable = False)
     lost_date = db.Column(db.String(40), nullable = False)
     status = db.Column(db.String(20), default = "Active")

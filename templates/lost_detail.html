@@ -6,7 +6,11 @@
   <body>
     <h1>Lost Item Details</h1>
 
-    <h2>{{ item.item_name }}</h2>
+    {% if item.image_url %}
+    <img src="{{ item.image_url }}" alt="Lost Item" width="400" />
+    {% endif %}
+
+    <h3>{{ item.item_name }}</h3>
 
     <p><strong>Description:</strong> {{ item.description }}</p>
 
