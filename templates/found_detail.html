@@ -1,25 +1,57 @@
 <!doctype html>
 <html>
   <head>
-    <title>Found Item Details</title>
+    <title>Found Item Details - LostInCampus</title>
   </head>
+
   <body>
     <h1>Found Item Details</h1>
 
     <h2>{{ item.item_name }}</h2>
 
-    <p><strong>Description:</strong> {{ item.description }}</p>
+    {% if item.image_url %}
+    <img src="{{ item.image_url }}" alt="Found Item" width="400" />
+    {% else %}
+    <p>No image available.</p>
+    {% endif %}
 
-    <p><strong>Found Location:</strong> {{ item.found_location }}</p>
+    <p>
+      <strong>Description:</strong>
+      {{ item.description }}
+    </p>
 
-    <p><strong>Date Found:</strong> {{ item.found_date }}</p>
+    <p>
+      <strong>Found Location:</strong>
+      {{ item.found_location }}
+    </p>
 
-    <p><strong>Collection Place:</strong> {{ item.collection_place }}</p>
+    <p>
+      <strong>Date Found:</strong>
+      {{ item.found_date }}
+    </p>
 
-    <p><strong>Status:</strong> {{ item.status }}</p>
+    <p>
+      <strong>Collection Place:</strong>
+      {{ item.collection_place }}
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      {{ item.status }}
+    </p>
 
     <hr />
 
+    <a href="/delete/found/{{ item.id }}">
+      <button>Delete My Report</button>
+    </a>
+
+    <br /><br />
+
     <a href="/found-items">← Back to Found Items</a>
+
+    <br /><br />
+
+    <a href="/">← Back to Home</a>
   </body>
 </html>

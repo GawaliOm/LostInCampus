@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 import cloudinary
 import os
 
-from cloudinary.uploader import upload
+from cloudinary.uploader import upload, destroy
 
 
 app = Flask(__name__)
@@ -44,7 +44,6 @@ def reportLost():
 
         name = request.form["name"]
         class_name = request.form["class_name"]
-        roll_number = request.form["roll_number"]
         contact_number = request.form["contact_number"]
         email = request.form["email"]
 
@@ -72,7 +71,6 @@ def reportLost():
         lost_item = LostItem(
             name=name,
             class_name=class_name,
-            roll_number=roll_number,
             contact_number=contact_number,
             email=email,
             item_name=item_name,
@@ -181,6 +179,61 @@ def found_detail(id):
         "found_detail.html",
         item=item
     )
+
+
+@app.route("/delete/<report_type>/<int:id>", methods=["GET", "POST"])
+def delete_report(report_type, id):
+
+    if report_type == "lost":
+        item = LostItem.query.get_or_404(id)
+
+    elif report_type == "found":
+        item = FoundItem.query.get_or_404(id)
+
+    else:
+        return "Invalid report type"
+
+    if request.method == "POST":
+
+        email = request.form["email"]
+
+        if email != item.email:
+            return render_template(
+                "delete_report.html",
+                error="Email does not match the report.",
+                report_type=report_type,
+                id=id
+            )
+
+        # Delete image from Cloudinary
+        if item.image_url:
+
+            try:
+                public_id = item.image_url.split("/")[-1]
+                public_id = public_id.rsplit(".", 1)[0]
+
+                if report_type == "lost":
+                    public_id = "lostincampus/lost/" + public_id
+                else:
+                    public_id = "lostincampus/found/" + public_id
+
+                destroy(public_id)
+
+            except Exception:
+                pass
+
+        # Delete report from database
+        db.session.delete(item)
+        db.session.commit()
+
+        return "Report deleted successfully."
+
+    return render_template(
+        "delete_report.html",
+        report_type=report_type,
+        id=id
+    )
+
 
 
 if __name__ == "__main__":
