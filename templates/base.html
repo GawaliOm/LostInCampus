@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}LostInCampus - Campus Lost & Found System{% endblock %}</title>
+  <meta name="description" content="LostInCampus helps students and staff report, search, and reunite lost and found items on campus using smart AI matching.">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="{{ url_for('home') }}" class="brand-logo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+        <div class="brand-text">LostIn<span>Campus</span></div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="{{ url_for('lost_items') }}" class="nav-link {% if request.endpoint == 'lost_items' %}active{% endif %}"><i class="fa-solid fa-magnifying-glass"></i> Lost Items</a></li>
+        <li><a href="{{ url_for('found_items') }}" class="nav-link {% if request.endpoint == 'found_items' %}active{% endif %}"><i class="fa-solid fa-box-archive"></i> Found Items</a></li>
+        <li><a href="{{ url_for('matches') }}" class="nav-link {% if request.endpoint == 'matches' %}active{% endif %}"><i class="fa-solid fa-wand-magic-sparkles"></i> Smart Matches</a></li>
+        <li><a href="{{ url_for('my_reports') }}" class="nav-link {% if request.endpoint == 'my_reports' %}active{% endif %}"><i class="fa-solid fa-user-gear"></i> My Reports</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="{{ url_for('reportLost') }}" class="btn btn-outline btn-sm">
+          <i class="fa-solid fa-circle-exclamation" style="color: var(--rose);"></i> Report Lost
+        </a>
+        <a href="{{ url_for('reportfound') }}" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-hand-holding-hand"></i> Report Found
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER WITH FLASH ALERTS -->
+  <main class="container" style="flex-grow: 1;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category if category != 'error' else 'danger' }}">
+              <span><i class="fa-solid fa-circle-info"></i> {{ message }}</span>
+              <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-brand"><i class="fa-solid fa-compass" style="color: var(--primary);"></i> LostInCampus</div>
+          <p style="max-width: 400px; line-height: 1.6;">
+            The ultimate smart campus lost & found platform. Helping students, faculty, and security reunite missing belongings effortlessly.
+          </p>
+        </div>
+        <div>
+          <h4 style="color: white; margin-bottom: 16px;">Quick Links</h4>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+            <li><a href="{{ url_for('lost_items') }}" style="color: #94a3b8;">Browse Lost Items</a></li>
+            <li><a href="{{ url_for('found_items') }}" style="color: #94a3b8;">Browse Found Items</a></li>
+            <li><a href="{{ url_for('reportLost') }}" style="color: #94a3b8;">File Lost Report</a></li>
+            <li><a href="{{ url_for('reportfound') }}" style="color: #94a3b8;">File Found Report</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: white; margin-bottom: 16px;">Campus Desk</h4>
+          <p style="line-height: 1.7; font-size: 0.9rem;">
+            <i class="fa-solid fa-building"></i> Main Admin Building, Room 101<br>
+            <i class="fa-solid fa-phone"></i> +1 (800) CAMPUS-HELP<br>
+            <i class="fa-solid fa-envelope"></i> lostandfound@campus.edu
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; {{ now.year }} LostInCampus System. Built with care for campus students and faculty.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GLOBAL SCRIPTS -->
+  <script>
+    // Live image upload preview helper
+    function previewImage(input, previewId) {
+      const preview = document.getElementById(previewId);
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // Modal toggler helper
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('active');
+    }
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('active');
+    }
+  </script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!-- SHARED NAVBAR - include in every template -->
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/" class="brand-logo">
+      <div class="brand-badge"><i class="fa-solid fa-compass"></i></div>
+      <div>LostIn<span>Campus</span></div>
+    </a>
+
+    <ul class="nav-links">
+      <li>
+        <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+      </li>
+      <li>
+        <a href="/lost-items" class="nav-link {% if request.path.startswith('/lost') and not request.path.startswith('/lost/') and '/report/' not in request.path %}active{% endif %}">
+          <i class="fa-solid fa-circle-exclamation"></i> Lost Items
+        </a>
+      </li>
+      <li>
+        <a href="/found-items" class="nav-link {% if request.path.startswith('/found') and not request.path.startswith('/found/') and '/report/' not in request.path %}active{% endif %}">
+          <i class="fa-solid fa-hand-holding-hand"></i> Found Items
+        </a>
+      </li>
+      <li>
+        <a href="/admin" class="nav-link {% if request.path.startswith('/admin') %}active{% endif %}" style="color: var(--admin-amber);">
+          <i class="fa-solid fa-shield-halved"></i> Admin
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-actions">
+      <button id="theme-toggle" class="btn btn-outline btn-sm" type="button" title="Switch Theme">
+        <i class="fa-solid fa-moon"></i> <span class="theme-text">Dark</span>
+      </button>
+      <a href="/report/lost" class="btn btn-danger btn-sm"><i class="fa-solid fa-plus"></i> Report Lost</a>
+      <a href="/report/found" class="btn btn-secondary btn-sm"><i class="fa-solid fa-plus"></i> Report Found</a>
+    </div>
+  </div>
+</nav>

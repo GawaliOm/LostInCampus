@@ -1,45 +1,105 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Report Found Item - LostInCampus</title>
+    <meta name="description" content="Report an item you found on campus. Help reunite it with its owner." />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
   </head>
-
   <body>
-    <h1>Report Found Item</h1>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="container navbar-inner">
+        <a href="/" class="brand-logo">
+          <div class="brand-badge"><i class="fa-solid fa-compass"></i></div>
+          <div>LostIn<span>Campus</span></div>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+          <li><a href="/lost-items" class="nav-link"><i class="fa-solid fa-circle-exclamation"></i> Lost Items</a></li>
+          <li><a href="/found-items" class="nav-link"><i class="fa-solid fa-hand-holding-hand"></i> Found Items</a></li>
+          <li><a href="/admin" class="nav-link" style="color: var(--admin-amber);"><i class="fa-solid fa-shield-halved"></i> Admin</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button id="theme-toggle" class="btn btn-outline btn-sm" type="button" title="Switch Theme">
+            <i class="fa-solid fa-moon"></i> <span class="theme-text">Dark</span>
+          </button>
+          <a href="/report/lost" class="btn btn-danger btn-sm"><i class="fa-solid fa-plus"></i> Report Lost</a>
+          <a href="/report/found" class="btn btn-secondary btn-sm"><i class="fa-solid fa-plus"></i> Report Found</a>
+        </div>
+      </div>
+    </nav>
 
-    <form method="POST" enctype="multipart/form-data">
-      <label>Name:</label><br />
-      <input type="text" name="name" required /><br /><br />
+    <main class="container" style="flex-grow: 1;">
+      <div class="form-card">
+        <h1 style="font-size: 1.8rem; margin-bottom: 8px; color: var(--found-green); display: flex; align-items: center; gap: 10px;">
+          <i class="fa-solid fa-hand-holding-hand"></i> Report Found Item
+        </h1>
+        <p style="color: var(--text-muted); margin-bottom: 28px;">Fill out this form if you found someone's belonging on campus grounds.</p>
 
-      <label>Contact Number:</label><br />
-      <input type="text" name="contact_number" required /><br /><br />
+        <form method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-user"></i> Your Name / Office <span style="color: var(--lost-red);">*</span></label>
+            <input type="text" name="name" class="form-control" required placeholder="Enter your name or desk name (e.g. Security Office)" />
+          </div>
 
-      <label>Email:</label><br />
-      <input type="email" name="email" required /><br /><br />
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-phone"></i> Contact Phone Number <span style="color: var(--lost-red);">*</span></label>
+            <input type="text" name="contact_number" class="form-control" required placeholder="e.g. +91 98000 11111" />
+          </div>
 
-      <label>Item Photo:</label><br />
-      <input type="file" name="image" /><br /><br />
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-envelope"></i> Email Address <span style="color: var(--lost-red);">*</span></label>
+            <input type="email" name="email" class="form-control" required placeholder="e.g. finder@campus.edu" />
+          </div>
 
-      <label>Item Name:</label><br />
-      <input type="text" name="item_name" required /><br /><br />
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-tag"></i> Item Name <span style="color: var(--lost-red);">*</span></label>
+            <input type="text" name="item_name" class="form-control" required placeholder="e.g. White AirPods Case" />
+          </div>
 
-      <label>Description:</label><br />
-      <textarea name="description" required></textarea><br /><br />
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-align-left"></i> Description <span style="color: var(--lost-red);">*</span></label>
+            <textarea name="description" class="form-control" required placeholder="Describe the item: brand, colors, condition, unique marks..."></textarea>
+          </div>
 
-      <label>Where was it found?</label><br />
-      <input type="text" name="found_location" required /><br /><br />
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-location-dot"></i> Where was it found? <span style="color: var(--lost-red);">*</span></label>
+            <input type="text" name="found_location" class="form-control" required placeholder="e.g. College Canteen walkway" />
+          </div>
 
-      <label>Date Found:</label><br />
-      <input type="date" name="found_date" required /><br /><br />
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-calendar"></i> Date Found <span style="color: var(--lost-red);">*</span></label>
+            <input type="date" name="found_date" class="form-control" required />
+          </div>
 
-      <label>Where can the owner collect it?</label><br />
-      <input type="text" name="collection_place" required /><br /><br />
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-building-columns"></i> Where can the owner collect it? <span style="color: var(--lost-red);">*</span></label>
+            <input type="text" name="collection_place" class="form-control" required placeholder="e.g. Security Guard Office, Gate 1" />
+          </div>
 
-      <button type="submit">Submit Found Report</button>
-    </form>
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-image"></i> Item Photo <span style="color: var(--text-muted); font-weight: 400;">(Optional)</span></label>
+            <input type="file" name="image" class="form-control" accept="image/*" />
+          </div>
 
-    <br />
+          <div style="display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-secondary">
+              <i class="fa-solid fa-paper-plane"></i> Submit Found Report
+            </button>
+            <a href="/" class="btn btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </main>
 
-    <a href="/">← Back to Home</a>
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; {{ now.year }} LostInCampus &mdash; Campus Lost &amp; Found System</p>
+      </div>
+    </footer>
   </body>
 </html>

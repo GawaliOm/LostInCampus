@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - LostInCampus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="container navbar-inner">
+        <a href="/" class="brand-logo">
+          <div class="brand-badge"><i class="fa-solid fa-compass"></i></div>
+          <div>LostIn<span>Campus</span></div>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+          <li><a href="/lost-items" class="nav-link"><i class="fa-solid fa-circle-exclamation"></i> Lost Items</a></li>
+          <li><a href="/found-items" class="nav-link"><i class="fa-solid fa-hand-holding-hand"></i> Found Items</a></li>
+          <li><a href="/admin" class="nav-link active" style="color: var(--admin-amber);"><i class="fa-solid fa-shield-halved"></i> Admin</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button id="theme-toggle" class="btn btn-outline btn-sm" type="button" title="Switch Theme">
+            <i class="fa-solid fa-moon"></i> <span class="theme-text">Dark</span>
+          </button>
+          <a href="/admin/logout" class="btn btn-outline btn-sm" style="border-color: rgba(217, 119, 6, 0.4); color: var(--admin-amber);">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container" style="margin-top: 32px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h1 style="font-size: 2rem; color: var(--admin-amber); display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-shield-halved"></i> Admin Control Dashboard
+          </h1>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Authenticated session. Delete or audit reports below.</p>
+        </div>
+
+        
+      </div>
+
+      <!-- ADMIN STATS -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px;">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+          <span class="badge badge-lost" style="margin-bottom: 6px;"><i class="fa-solid fa-circle-exclamation"></i> TOTAL LOST REPORTS</span>
+          <h2 style="font-size: 2.2rem; color: var(--lost-red); font-weight: 700; margin-top: 4px;">{{ lost_items|length }}</h2>
+        </div>
+
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+          <span class="badge badge-found" style="margin-bottom: 6px;"><i class="fa-solid fa-hand-holding-hand"></i> TOTAL FOUND REPORTS</span>
+          <h2 style="font-size: 2.2rem; color: var(--found-green); font-weight: 700; margin-top: 4px;">{{ found_items|length }}</h2>
+        </div>
+      </div>
+
+      <!-- MANAGING LOST REPORTS -->
+      <section style="margin-bottom: 40px;">
+        <h2 class="section-title" style="margin-bottom: 16px;">
+          <span class="badge badge-lost"><i class="fa-solid fa-circle-exclamation"></i> LOST</span> Manage Lost Item Reports
+        </h2>
+
+        {% if lost_items %}
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Item Name</th>
+                  <th>Reporter</th>
+                  <th>Email & Phone</th>
+                  <th>Location</th>
+                  <th>Date Lost</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in lost_items %}
+                  <tr>
+                    <td><strong>#LOST-{{ item.id }}</strong></td>
+                    <td><strong>{{ item.item_name }}</strong></td>
+                    <td>{{ item.name }} ({{ item.class_name }})</td>
+                    <td>{{ item.email }}<br><small style="color: var(--text-muted);">{{ item.contact_number }}</small></td>
+                    <td>{{ item.lost_location }}</td>
+                    <td>{{ item.lost_date }}</td>
+                    <td>
+                      <form method="POST" action="/admin/delete/lost/{{ item.id }}" onsubmit="return confirm('Delete lost report as Admin?');">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); text-align: center; color: var(--text-muted);">
+            No lost item reports found.
+          </div>
+        {% endif %}
+      </section>
+
+      <!-- MANAGING FOUND REPORTS -->
+      <section style="margin-bottom: 60px;">
+        <h2 class="section-title" style="margin-bottom: 16px;">
+          <span class="badge badge-found"><i class="fa-solid fa-hand-holding-hand"></i> FOUND</span> Manage Found Item Reports
+        </h2>
+
+        {% if found_items %}
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Item Name</th>
+                  <th>Finder / Office</th>
+                  <th>Email & Phone</th>
+                  <th>Location Found</th>
+                  <th>Collection Place</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in found_items %}
+                  <tr>
+                    <td><strong>#FOUND-{{ item.id }}</strong></td>
+                    <td><strong>{{ item.item_name }}</strong></td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.email }}<br><small style="color: var(--text-muted);">{{ item.contact_number }}</small></td>
+                    <td>{{ item.found_location }}</td>
+                    <td>{{ item.collection_place }}</td>
+                    <td>
+                      <form method="POST" action="/admin/delete/found/{{ item.id }}" onsubmit="return confirm('Delete found report as Admin?');">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); text-align: center; color: var(--text-muted);">
+            No found item reports found.
+          </div>
+        {% endif %}
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; LostInCampus - Campus Lost & Found System</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+

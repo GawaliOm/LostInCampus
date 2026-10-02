@@ -1,32 +1,166 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>LostInCampus</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LostInCampus - Campus Lost & Found System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
   </head>
 
   <body>
-    <h1>LostInCampus</h1>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="container navbar-inner">
+        <a href="/" class="brand-logo">
+          <div class="brand-badge"><i class="fa-solid fa-compass"></i></div>
+          <div>LostIn<span>Campus</span></div>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/" class="nav-link active"><i class="fa-solid fa-house"></i> Home</a></li>
+          <li><a href="/lost-items" class="nav-link"><i class="fa-solid fa-circle-exclamation"></i> Lost Items</a></li>
+          <li><a href="/found-items" class="nav-link"><i class="fa-solid fa-hand-holding-hand"></i> Found Items</a></li>
+          <li><a href="/admin" class="nav-link" style="color: var(--admin-amber);"><i class="fa-solid fa-shield-halved"></i> Admin</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button id="theme-toggle" class="btn btn-outline btn-sm" type="button" title="Switch Theme">
+            <i class="fa-solid fa-moon"></i> <span class="theme-text">Dark</span>
+          </button>
+          <a href="/report/lost" class="btn btn-danger btn-sm"><i class="fa-solid fa-plus"></i> Report Lost</a>
+          <a href="/report/found" class="btn btn-secondary btn-sm"><i class="fa-solid fa-plus"></i> Report Found</a>
+        </div>
+      </div>
+    </nav>
 
-    <h2>Campus Lost & Found System</h2>
+    <!-- MAIN CONTAINER -->
+    <main class="container">
+      <!-- HERO -->
+      <div class="hero-card">
+        <h1 class="hero-title">Campus Lost & Found Portal</h1>
+        <p class="hero-subtitle">
+          The central platform for students, faculty, and campus security to report missing belongings and reunite lost items.
+        </p>
 
-    <p>Lost something or found something on campus?</p>
+        <div class="hero-actions">
+          <a href="/report/lost" class="btn btn-danger">
+            <i class="fa-solid fa-circle-exclamation"></i> Report Lost Item
+          </a>
+          <a href="/report/found" class="btn btn-secondary">
+            <i class="fa-solid fa-hand-holding-hand"></i> Report Found Item
+          </a>
+        </div>
+      </div>
 
-    <a href="/report/lost">
-      <button>I Lost Something</button>
-    </a>
+      <!-- SECTION 1: RECENT LOST REPORTS -->
+      <section style="margin: 40px 0;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="badge badge-lost"><i class="fa-solid fa-circle-exclamation"></i> LOST</span> Recent Lost Reports
+          </h2>
+          <a href="/lost-items" class="btn btn-outline btn-sm">View Full Directory &rarr;</a>
+        </div>
 
-    <br /><br />
+        {% if recent_lost %}
+          <div class="card-grid">
+            {% for item in recent_lost %}
+              <div class="item-card">
+                <div class="card-img-wrapper">
+                  {% if item.image_url %}
+                    <img src="{{ item.image_url }}" alt="{{ item.item_name }}" class="card-img" />
+                  {% else %}
+                    <div class="card-img-placeholder"><i class="fa-solid fa-image"></i></div>
+                  {% endif %}
+                </div>
 
-    <a href="/report/found">
-      <button>I Found Something</button>
-    </a>
+                <div class="card-body">
+                  <h3 class="card-title">{{ item.item_name }}</h3>
+                  <p class="card-desc">{{ item.description }}</p>
 
-    <hr />
+                  <div class="card-meta">
+                    <div class="meta-row">
+                      <i class="fa-solid fa-location-dot meta-icon"></i>
+                      <span><strong>Lost at:</strong> {{ item.lost_location }}</span>
+                    </div>
+                    <div class="meta-row">
+                      <i class="fa-solid fa-calendar meta-icon"></i>
+                      <span><strong>Date:</strong> {{ item.lost_date }}</span>
+                    </div>
+                  </div>
 
-    <a href="/lost-items">View Lost Items</a>
+                  <a href="/lost/{{ item.id }}" class="btn btn-outline btn-sm" style="margin-top: auto; text-align: center; width: 100%;">
+                    View Details
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 36px; text-align: center; color: var(--text-muted);">
+            <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 8px;"></i>
+            <p>No recent lost items reported.</p>
+          </div>
+        {% endif %}
+      </section>
 
-    <br /><br />
+      <!-- SECTION 2: RECENT FOUND REPORTS -->
+      <section style="margin: 40px 0 60px;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="badge badge-found"><i class="fa-solid fa-hand-holding-hand"></i> FOUND</span> Recent Found Reports
+          </h2>
+          <a href="/found-items" class="btn btn-outline btn-sm">View Full Directory &rarr;</a>
+        </div>
 
-    <a href="/found-items">View Found Items</a>
+        {% if recent_found %}
+          <div class="card-grid">
+            {% for item in recent_found %}
+              <div class="item-card">
+                <div class="card-img-wrapper">
+                  {% if item.image_url %}
+                    <img src="{{ item.image_url }}" alt="{{ item.item_name }}" class="card-img" />
+                  {% else %}
+                    <div class="card-img-placeholder"><i class="fa-solid fa-image"></i></div>
+                  {% endif %}
+                </div>
+
+                <div class="card-body">
+                  <h3 class="card-title">{{ item.item_name }}</h3>
+                  <p class="card-desc">{{ item.description }}</p>
+
+                  <div class="card-meta">
+                    <div class="meta-row">
+                      <i class="fa-solid fa-location-dot meta-icon"></i>
+                      <span><strong>Found at:</strong> {{ item.found_location }}</span>
+                    </div>
+                    <div class="meta-row">
+                      <i class="fa-solid fa-building-columns meta-icon"></i>
+                      <span><strong>Collect at:</strong> {{ item.collection_place }}</span>
+                    </div>
+                  </div>
+
+                  <a href="/found/{{ item.id }}" class="btn btn-secondary btn-sm" style="margin-top: auto; text-align: center; width: 100%;">
+                    View Details
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 36px; text-align: center; color: var(--text-muted);">
+            <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 8px;"></i>
+            <p>No recent found items reported.</p>
+          </div>
+        {% endif %}
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; {{ now.year }} LostInCampus &mdash; Campus Lost & Found System | <a href="/admin" style="color: var(--admin-amber);"><i class="fa-solid fa-shield-halved"></i> Admin Portal</a></p>
+      </div>
+    </footer>
   </body>
 </html>
+
