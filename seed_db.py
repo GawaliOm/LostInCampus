@@ -8,6 +8,7 @@ from app import app
 from extentions import db
 from models.reportLost import LostItem
 from models.reportFound import FoundItem
+from models.user import AdminUser
 
 def seed():
     with app.app_context():
@@ -34,7 +35,7 @@ def seed():
                 name="Om Gawali",
                 class_name="TE-IT",
                 contact_number="+91 91234 56789",
-                email="om.gawali@campus.edu",
+                email="gawali.om006@gmail.com",
                 item_name="Student ID Card - Om Gawali",
                 description="Blue lanyard with campus emblem. Contains Student ID card #2024-IT-088.",
                 image_url="https://images.unsplash.com/photo-1578574577315-3fbeb0cecdc2?auto=format&fit=crop&w=600&q=80",
@@ -88,8 +89,19 @@ def seed():
         for item in found_items:
             db.session.add(item)
 
+        # Seed Default Administrator User: Om Gawali
+        print("Seeding default Administrator user: Om Gawali...")
+        admin = AdminUser(
+            name="Om Gawali",
+            username="omgawali",
+            email="gawali.om006@gmail.com",
+            role="Super Administrator"
+        )
+        admin.set_password("admin123")
+        db.session.add(admin)
+
         db.session.commit()
-        print("Successfully seeded Lost & Found items!")
+        print("Successfully seeded Lost & Found items and Default Admin (Om Gawali)!")
 
 if __name__ == "__main__":
     seed()

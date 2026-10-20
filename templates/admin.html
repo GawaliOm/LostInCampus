@@ -43,7 +43,17 @@
           <p style="color: var(--text-muted); font-size: 0.9rem;">Authenticated session. Delete or audit reports below.</p>
         </div>
 
-        
+        <div style="display: flex; align-items: center; gap: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: var(--radius-md);">
+          <div style="width: 38px; height: 38px; border-radius: 50%; background: var(--admin-amber-bg); color: var(--admin-amber); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border: 1px solid rgba(217, 119, 6, 0.4);">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+              {{ admin_name }} <span class="badge" style="background: var(--admin-amber-bg); color: var(--admin-amber); font-size: 0.7rem; padding: 2px 6px;">{{ admin_role }}</span>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ admin_email }}</div>
+          </div>
+        </div>
       </div>
 
       <!-- ADMIN STATS -->

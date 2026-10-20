@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from extentions import db
 from models.reportLost import LostItem
 from models.reportFound import FoundItem
+from models.user import AdminUser
 from utils.uploader import save_uploaded_image, delete_uploaded_image
 from dotenv import load_dotenv
 
@@ -157,19 +158,71 @@ def delete_report(report_type, id):
 
     return render_template("delete_report.html", report_type=report_type, id=id)
 
+def init_default_admin():
+    """Ensure default administrator Om Gawali exists in the database."""
+    try:
+        admin = AdminUser.query.filter(
+            (AdminUser.username == "omgawali") | (AdminUser.email == "gawali.om006@gmail.com")
+        ).first()
+        if not admin:
+            admin = AdminUser(
+                name="Om Gawali",
+                username="omgawali",
+                email="gawali.om006@gmail.com",
+                role="Super Administrator"
+            )
+            admin.set_password("admin123")
+            db.session.add(admin)
+            db.session.commit()
+        elif admin.email != "gawali.om006@gmail.com":
+            admin.email = "gawali.om006@gmail.com"
+            db.session.commit()
+    except Exception:
+        db.session.rollback()
+
+
 # ----------------------------------------------------
-# ADMIN PANEL WITH PASSWORD PROTECTION ('admin123')
+# ADMIN PANEL WITH DEFAULT ADMIN USER (Om Gawali)
 # ----------------------------------------------------
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     error = None
+    init_default_admin()
+
     if request.method == "POST":
-        password = request.form.get("password", "").strip()
-        if password == "admin123":
+        username_input = request.form.get("username", "").strip()
+        password_input = request.form.get("password", "").strip()
+
+        # Search for admin by username, full name, or email (case-insensitive)
+        admin_user = None
+        if username_input:
+            admin_user = AdminUser.query.filter(
+                (db.func.lower(AdminUser.username) == username_input.lower()) |
+                (db.func.lower(AdminUser.name) == username_input.lower()) |
+                (db.func.lower(AdminUser.email) == username_input.lower())
+            ).first()
+
+        # If user left username blank or typed 'admin', default to the Om Gawali admin account
+        if not admin_user and (not username_input or username_input.lower() in ["admin", "om", "om gawali", "omgawali"]):
+            admin_user = AdminUser.query.filter_by(username="omgawali").first()
+
+        if admin_user and admin_user.check_password(password_input):
             session["admin_logged_in"] = True
+            session["admin_name"] = admin_user.name
+            session["admin_username"] = admin_user.username
+            session["admin_email"] = admin_user.email
+            session["admin_role"] = admin_user.role
+            return redirect(url_for("admin"))
+        elif password_input == "admin123":
+            # Emergency/default fallback
+            session["admin_logged_in"] = True
+            session["admin_name"] = "Om Gawali"
+            session["admin_username"] = "omgawali"
+            session["admin_email"] = "gawali.om006@gmail.com"
+            session["admin_role"] = "Super Administrator"
             return redirect(url_for("admin"))
         else:
-            error = "Invalid password. Access denied."
+            error = "Invalid credentials. Please enter a valid username/email and password."
 
     # Check if admin is authenticated
     if not session.get("admin_logged_in"):
@@ -177,11 +230,22 @@ def admin():
 
     all_lost = LostItem.query.order_by(LostItem.id.desc()).all()
     all_found = FoundItem.query.order_by(FoundItem.id.desc()).all()
-    return render_template("admin.html", lost_items=all_lost, found_items=all_found)
+    return render_template(
+        "admin.html",
+        lost_items=all_lost,
+        found_items=all_found,
+        admin_name=session.get("admin_name", "Om Gawali"),
+        admin_email=session.get("admin_email", "gawali.om006@gmail.com"),
+        admin_role=session.get("admin_role", "Super Administrator")
+    )
 
 @app.route("/admin/logout")
 def admin_logout():
     session.pop("admin_logged_in", None)
+    session.pop("admin_name", None)
+    session.pop("admin_username", None)
+    session.pop("admin_email", None)
+    session.pop("admin_role", None)
     return redirect(url_for("admin"))
 
 @app.route("/admin/delete/<report_type>/<int:id>", methods=["POST"])
@@ -206,4 +270,5 @@ def admin_delete(report_type, id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+        init_default_admin()
     app.run(debug=True)

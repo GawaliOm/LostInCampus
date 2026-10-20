@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </head>
+
 <body>
   <!-- NAVBAR -->
   <nav class="navbar">
@@ -20,7 +22,8 @@
         <li><a href="/" class="nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
         <li><a href="/lost-items" class="nav-link"><i class="fa-solid fa-circle-exclamation"></i> Lost Items</a></li>
         <li><a href="/found-items" class="nav-link"><i class="fa-solid fa-hand-holding-hand"></i> Found Items</a></li>
-        <li><a href="/admin" class="nav-link active" style="color: var(--admin-amber);"><i class="fa-solid fa-shield-halved"></i> Admin</a></li>
+        <li><a href="/admin" class="nav-link active" style="color: var(--admin-amber);"><i
+              class="fa-solid fa-shield-halved"></i> Admin</a></li>
       </ul>
       <div class="nav-actions">
         <button id="theme-toggle" class="btn btn-outline btn-sm" type="button" title="Switch Theme">
@@ -33,33 +36,60 @@
   <main class="container" style="flex-grow: 1;">
     <div class="form-card" style="max-width: 440px; margin: 60px auto; border-color: rgba(217, 119, 6, 0.35);">
       <div style="text-align: center; margin-bottom: 28px;">
-        <div style="width: 56px; height: 56px; background: var(--admin-amber-bg); color: var(--admin-amber); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(217, 119, 6, 0.3); margin-bottom: 14px;">
+        <div
+          style="width: 56px; height: 56px; background: var(--admin-amber-bg); color: var(--admin-amber); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(217, 119, 6, 0.3); margin-bottom: 14px;">
           <i class="fa-solid fa-lock"></i>
         </div>
         <h1 style="font-size: 1.6rem; margin-bottom: 4px;">Admin Portal</h1>
-        <p style="color: var(--text-muted); font-size: 0.875rem;">Restricted access. Enter the security password to continue.</p>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">Restricted access. Enter the security password to
+          continue.</p>
+      </div>
+
+      <div
+        style="background: var(--admin-amber-bg); border: 1px solid rgba(217, 119, 6, 0.4); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 20px; font-size: 0.85rem;">
+        <div
+          style="font-weight: 700; color: var(--admin-amber); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-user-shield"></i> Default Administrator
+        </div>
+        <div style="color: var(--text-muted); line-height: 1.5;">
+          <strong>User:</strong> <code
+            style="background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px;">omgawali</code> (Om Gawali)<br>
+          <strong>Email:</strong> <code
+            style="background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px;">gawali.om006@gmail.com</code><br>
+          <strong>Password:</strong> <code
+            style="background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px;">admin123</code>
+        </div>
       </div>
 
       {% if error %}
-      <div style="background: var(--lost-red-bg); border: 1px solid var(--lost-red); color: var(--lost-red); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+      <div
+        style="background: var(--lost-red-bg); border: 1px solid var(--lost-red); color: var(--lost-red); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
         <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
       </div>
       {% endif %}
 
       <form method="POST" action="/admin">
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label"><i class="fa-solid fa-user"></i> Username or Email</label>
+          <input type="text" name="username" id="admin-username" class="form-control"
+            placeholder="omgawali or gawali.om006@gmail.com" value="omgawali" required autofocus />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
           <label class="form-label"><i class="fa-solid fa-key"></i> Password</label>
-          <input type="password" name="password" id="admin-password" class="form-control" placeholder="Enter admin password" required autofocus />
+          <input type="password" name="password" id="admin-password" class="form-control"
+            placeholder="Enter admin password" required />
         </div>
 
         <button type="submit" class="btn" id="admin-unlock-btn"
-          style="width: 100%; margin-top: 8px; background: var(--admin-amber); color: #000; font-weight: 700; border: none;">
+          style="width: 100%; margin-top: 4px; background: var(--admin-amber); color: #000; font-weight: 700; border: none; padding: 12px;">
           <i class="fa-solid fa-shield-halved"></i> Unlock Admin Dashboard
         </button>
       </form>
 
       <div style="text-align: center; margin-top: 20px;">
-        <a href="/" style="font-size: 0.85rem; color: var(--text-muted);"><i class="fa-solid fa-arrow-left"></i> Return to Homepage</a>
+        <a href="/" style="font-size: 0.85rem; color: var(--text-muted);"><i class="fa-solid fa-arrow-left"></i> Return
+          to Homepage</a>
       </div>
     </div>
   </main>
@@ -70,4 +100,5 @@
     </div>
   </footer>
 </body>
+
 </html>
